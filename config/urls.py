@@ -8,8 +8,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    url( r'^admin/', include(admin.site.urls) ),  # eg host/project_x/admin/
+    url( r'^admin/', include(admin.site.urls) ),
 
-    url( r'^', include('app_x.urls_app') ),  # eg host/project_x/anything/
+    url( r'^', include('transformer_app.urls_app') ),
 
 )

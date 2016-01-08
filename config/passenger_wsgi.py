@@ -12,7 +12,7 @@ Prepares application environment.
 Variables assume project setup like:
 stuff
     django_template_project
-        app_x
+        transformer_app
         config
     env_min_djng
 """
