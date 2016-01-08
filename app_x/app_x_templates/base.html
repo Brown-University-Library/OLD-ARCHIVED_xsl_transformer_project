@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <title>
+        {% block page_title %}
+        app_x - Brown University Library
+        {% endblock page_title %}
+    </title>
+    <link href="//library.brown.edu/css_2011/BUL2011.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="//library.brown.edu/scripts_2011/css3-mediaqueries.js"></script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <div id="header">
+            <p class="top_header_links">
+                <a href="http://library.brown.edu/libweb/proxy.php">Off-Campus Access</a> &nbsp;&nbsp;&#124;&nbsp;&nbsp;
+                <a href="http://library.brown.edu/libweb/atoz.php">Library A&ndash;Z</a> <!-- &nbsp;&nbsp;&#124;&nbsp;&nbsp; -->
+                {% if logout_url %}&nbsp;&nbsp;&#124;&nbsp;&nbsp;<a href="{{ logout_url }}">Log-out</a>{% endif %}
+            </p>
+
+            <div class="BUhomelink">
+                <a href="http://www.brown.edu"><img src="//library.brown.edu/images/spacer.gif" width="50" alt="Brown University Homepage" title="Brown University Homepage" /></a>
+            </div>
+
+            <div class="BULhomelink">
+                <a href="http://library.brown.edu/"><img src="//library.brown.edu/images/spacer.gif" width="440" height="30" alt="Brown University Library Homepage" title="Brown University Library Homepage" /></a>
+            </div>
+
+        </div> <!-- end div#header -->
+
+        <div class="content-wrapper findit-core">
+
+            <div class="large-content findit-core">
+                <h3>app x</h3>
+
+                <div style="margin:2em;">
+                    {% block content %}
+                    {% endblock content %}
+                </div>
+
+            </div> <!-- end div.large-content findit-core -->
+
+        </div> <!-- end div.content-wrapper findit-core -->
+
+    </div> <!-- end div#wrapper -->
+
+</body>
+
+</html>
