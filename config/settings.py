@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 """
 Django settings for django_template_project.
 
-Environmental variables triggered in project's env_min_djng/bin/activate, when using runserver,
-  or env_min_djng/bin/activate_this.py, when using apache via passenger.
+Environmental variables triggered in project's env_xsl/bin/activate, when using runserver,
+  or env_xsl/bin/activate_this.py, when using apache via passenger.
 """
 
 import json, os
