@@ -9,6 +9,7 @@ Environmental variables triggered in project's env_min_djng/bin/activate, when u
 """
 
 import json, os
+import dj_database_url
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -60,16 +61,7 @@ WSGI_APPLICATION = 'config.passenger_wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': os.environ['DJANGO_TEMPLATE__DATABASES_ENGINE'],
-        'NAME': os.environ['DJANGO_TEMPLATE__DATABASES_NAME'],
-        'USER': os.environ['DJANGO_TEMPLATE__DATABASES_USER'],
-        'PASSWORD': os.environ['DJANGO_TEMPLATE__DATABASES_PASSWORD'],
-        'HOST': os.environ['DJANGO_TEMPLATE__DATABASES_HOST'],
-        'PORT': os.environ['DJANGO_TEMPLATE__DATABASES_PORT'],
-    }
-}
+DATABASES = json.loads( os.environ['XSL__DATABASES_JSON'] )
 
 
 # Internationalization

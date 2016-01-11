@@ -9,8 +9,8 @@
 
 Run this internally, with trusted xml and xsl files, to avoid xsl security vulnerabilites.
 
-- Tom Eastman's PyCon 2015 talk ["Serialization formats are not toys"](https://www.youtube.com/watch?v=kjZHjvrAS74).
-- [OWASP pdf](https://www.owasp.org/images/a/ae/OWASP_Switzerland_Meeting_2015-06-17_XSLT_SSRF_ENG.pdf) on xsl security vulnerabilities.
+- see Tom Eastman's PyCon 2015 talk ["Serialization formats are not toys"](https://www.youtube.com/watch?v=kjZHjvrAS74).
+- see [OWASP pdf](https://www.owasp.org/images/a/ae/OWASP_Switzerland_Meeting_2015-06-17_XSLT_SSRF_ENG.pdf) on xsl security vulnerabilities.
 
 
 ##### usage #####
