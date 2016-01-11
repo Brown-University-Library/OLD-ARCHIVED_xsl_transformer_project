@@ -1,5 +1,5 @@
 """
-WSGI config for django_template_project.
+WSGI config for xsl_transformer_project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 Prepares application environment.
 Variables assume project setup like:
 stuff
-    django_template_project
+    xsl_transformer_project
         transformer_app
         config
     env_xsl
@@ -25,7 +25,7 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 
 ## vars
 ACTIVATE_FILE = os.path.abspath( u'%s/../../env_xsl/bin/activate_this.py' % current_directory )
-PROJECT_DIR = os.path.abspath( u'%s/../../django_template_project' % current_directory )
+PROJECT_DIR = os.path.abspath( u'%s/../../xsl_transformer_project' % current_directory )
 PROJECT_ENCLOSING_DIR = os.path.abspath( u'%s/../..' % current_directory )
 SETTINGS_MODULE = u'config.settings'
 SITE_PACKAGES_DIR = os.path.abspath( u'%s/../../env_xsl/lib/python2.7/site-packages' % current_directory )

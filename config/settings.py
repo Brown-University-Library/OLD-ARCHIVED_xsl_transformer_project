@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 """
-Django settings for django_template_project.
+Django settings for xsl_transformer_project.
 
 Environmental variables triggered in project's env_xsl/bin/activate, when using runserver,
   or env_xsl/bin/activate_this.py, when using apache via passenger.
