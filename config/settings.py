@@ -19,16 +19,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['DJANGO_TEMPLATE__SECRET_KEY']
+SECRET_KEY = os.environ['XSL__SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-temp_DEBUG = json.loads( os.environ['DJANGO_TEMPLATE__DEBUG_JSON'] )
-assert temp_DEBUG in [ True, False ], Exception( 'DEBUG env setting is, "%s"' )
-DEBUG = temp_DEBUG
-
+DEBUG = json.loads( os.environ['XSL__DEBUG_JSON'] )  # will be True or False
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = json.loads( os.environ['DJANGO_TEMPLATE__ALLOWED_HOSTS'] )  # list
+ADMINS = json.loads( os.environ['XSL__ADMINS_JSON'] )
+MANAGERS = ADMINS
+
+ALLOWED_HOSTS = json.loads( os.environ['XSL__ALLOWED_HOSTS'] )  # list
 
 
 # Application definition
@@ -81,18 +81,18 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = os.environ['DJANGO_TEMPLATE__STATIC_URL']
-STATIC_ROOT = os.environ['DJANGO_TEMPLATE__STATIC_ROOT']  # needed for collectstatic command
+STATIC_URL = os.environ['XSL__STATIC_URL']
+STATIC_ROOT = os.environ['XSL__STATIC_ROOT']  # needed for collectstatic command
 
 
 # Templates
 
-TEMPLATE_DIRS = json.loads( os.environ['DJANGO_TEMPLATE__TEMPLATE_DIRS'] )  # list
+TEMPLATE_DIRS = json.loads( os.environ['XSL__TEMPLATE_DIRS'] )  # list
 
 
 # Email
-EMAIL_HOST = os.environ['DJANGO_TEMPLATE__EMAIL_HOST']
-EMAIL_PORT = int( os.environ['DJANGO_TEMPLATE__EMAIL_PORT'] )
+EMAIL_HOST = os.environ['XSL__EMAIL_HOST']
+EMAIL_PORT = int( os.environ['XSL__EMAIL_PORT'] )
 
 
 # sessions
@@ -117,7 +117,7 @@ LOGGING = {
         'logfile': {
             'level':'DEBUG',
             'class':'logging.FileHandler',  # note: configure server to use system's log-rotate to avoid permissions issues
-            'filename': os.environ.get(u'DJANGO_TEMPLATE__LOG_PATH'),
+            'filename': os.environ.get(u'XSL__LOG_PATH'),
             'formatter': 'standard',
         },
         'console':{
@@ -129,7 +129,7 @@ LOGGING = {
     'loggers': {
         'transformer_app': {
             'handlers': ['logfile'],
-            'level': os.environ.get(u'DJANGO_TEMPLATE__LOG_LEVEL'),
+            'level': os.environ.get(u'XSL__LOG_LEVEL'),
         },
     }
 }
