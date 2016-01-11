@@ -42,7 +42,7 @@ for entry in [PROJECT_DIR, PROJECT_ENCLOSING_DIR, SITE_PACKAGES_DIR]:
 os.environ[u'DJANGO_SETTINGS_MODULE'] = SETTINGS_MODULE  # so django can access its settings
 
 ## load up env vars
-SETTINGS_FILE = os.environ['DJANGO_TEMPLATE__SETTINGS_PATH']  # set in activate_this.py, and activated above
+SETTINGS_FILE = os.environ['XSL__SETTINGS_PATH']  # set in activate_this.py, and activated above
 import shellvars
 var_dct = shellvars.get_vars( SETTINGS_FILE )
 for ( key, val ) in var_dct.items():
