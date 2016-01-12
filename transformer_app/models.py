@@ -4,14 +4,15 @@ from __future__ import unicode_literals
 import datetime, json, logging, os, pprint, itertools
 from . import settings_app
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.encoding import smart_unicode
 from django.utils.text import slugify
 
 log = logging.getLogger(__name__)
 
 
-class HelperV1( object ):
+class Validator( object ):
+    """ Supports view.run_transform_v1() """
 
     def check_validity( self, request ):
         """ Checks ip & params.
@@ -49,3 +50,32 @@ class HelperV1( object ):
                 return_val = True
         log.debug( 'return_val, `%s`' % return_val )
         return return_val
+
+    # end class Validator
+
+
+class ViewHelper( object ):
+    """ Handles transform code. """
+
+    def handle_get( self, request ):
+        return 'foo'
+
+    def build_get_response( self, data ):
+        return HttpResponse( 'not yet implemented' )
+
+    def handle_post( self, request ):
+        return 'foo'
+
+    def build_post_response( self, data ):
+        return HttpResponse( 'not yet implemented' )
+
+    # end class ViewHelper
+
+
+class Transformer( object ):
+    """ Handles transform code. """
+
+    def foo( self ):
+        return 'bar'
+
+    # end class Transformer

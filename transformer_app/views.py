@@ -6,11 +6,12 @@ from django.conf import settings as project_settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
-from .models import HelperV1
+from .models import Validator, ViewHelper
 from django.shortcuts import get_object_or_404, render
 
 log = logging.getLogger(__name__)
-
+validator = Validator()
+view_helper = ViewHelper()
 
 
 def hi( request ):
@@ -22,10 +23,16 @@ def hi( request ):
 def run_transform_v1 ( request ):
     """ Manages transform flow. """
     log.debug( 'starting' )
-    now = datetime.datetime.now()
+    resp = HttpResponseBadRequest( 'Bad Request' )
+    if validator.check_validity( request ) is False:
+        return resp
+    if request.method == 'GET':
+        data = view_helper.handle_get( request )
+        resp = view_helper.build_get_response( data )
+    elif request.method == 'POST':
+        data = view_helper.handle_post( request )
+        resp = view_helper.build_post_response( data )
+    return resp
 
-    helper = HelperV1()
-    if helper.check_validity( request ) is False:
-        return HttpResponseBadRequest( 'Bad Request' )
-
-    return HttpResponse( '<p>foo</p> <p>( %s )</p>' % now )
+    # now = datetime.datetime.now()
+    # return HttpResponse( '<p>foo</p> <p>( %s )</p>' % now )
