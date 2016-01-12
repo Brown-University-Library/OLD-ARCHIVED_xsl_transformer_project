@@ -109,8 +109,8 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'standard': {
-            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        'format': "[%(asctime)s] %(levelname)s [%(module)s-%(funcName)s()::%(lineno)d] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
         },
     },
     'handlers': {
