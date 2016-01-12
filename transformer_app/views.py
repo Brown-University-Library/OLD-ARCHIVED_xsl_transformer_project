@@ -6,6 +6,7 @@ from django.conf import settings as project_settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
+from .models import HelperV1
 from django.shortcuts import get_object_or_404, render
 
 log = logging.getLogger(__name__)
@@ -22,4 +23,9 @@ def run_transform_v1 ( request ):
     """ Manages transform flow. """
     log.debug( 'starting' )
     now = datetime.datetime.now()
+
+    helper = HelperV1()
+    if helper.check_validity( request ) is False:
+        return HttpResponseBadRequest( 'Bad Request' )
+
     return HttpResponse( '<p>foo</p> <p>( %s )</p>' % now )
