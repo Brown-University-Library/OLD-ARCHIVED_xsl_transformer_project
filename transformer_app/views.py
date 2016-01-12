@@ -21,4 +21,5 @@ def hi( request ):
 def run_transform_v1 ( request ):
     """ Manages transform flow. """
     log.debug( 'starting' )
+    now = datetime.datetime.now()
     return HttpResponse( '<p>foo</p> <p>( %s )</p>' % now )
