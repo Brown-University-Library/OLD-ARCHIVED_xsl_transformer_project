@@ -26,18 +26,26 @@ class HelperV1( object ):
     def check_ip( self, client_ip ):
         """ Validates ip.
             Called by check_validity() """
+        return_val = False
         if client_ip in settings_app.LEGIT_IPS:
-            return True
+            return_val = True
         else:
             log.warning( 'bad ip, `%s`' % client_ip )
-            return False
+            return_val = False
+        log.debug( 'ip, `%s` has return_val, `%s`' % (client_ip, return_val) )
+        return return_val
 
     def check_params( self, request ):
         """ Validates params.
             Called by check_validity() """
+        return_val = False
         if request.method == 'POST':
-            log.debug( 'request.post, ```%s```' % pprint.pformat(request.POST) )
+            log.debug( 'sorted(request.POST.keys()), ```%s```' % pprint.pformat(sorted(request.POST.keys())) )
+            if sorted( request.POST.keys() ) == settings_app.LEGIT_POST_KEYS:
+                return_val = True
         elif request.method == 'GET':
-            log.debug( 'request.get, ```%s```' % pprint.pformat(request.GET) )
-        return False
-
+            log.debug( 'sorted(request.GET.keys()), ```%s```' % pprint.pformat(sorted(request.GET.keys())) )
+            if sorted( request.GET.keys() ) == settings_app.LEGIT_GET_KEYS:
+                return_val = True
+        log.debug( 'return_val, `%s`' % return_val )
+        return return_val
