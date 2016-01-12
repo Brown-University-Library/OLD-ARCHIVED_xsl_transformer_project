@@ -18,9 +18,9 @@ class HelperV1( object ):
             Called by views.run_transform_v1() """
         log.debug( 'starting check_validity()' )
         return_val = False
-        if self.check_ip( request.META.get('REMOTE_ADDR', 'unavailable') ) == True and self.check_params( request ) == True:
+        if self.check_ip( unicode(request.META.get('REMOTE_ADDR', 'unavailable')) ) == True and self.check_params( request ) == True:
             return_val = True
-        log.debug( '%s - return_val, `%s`' % return_val )
+        log.debug( 'return_val, `%s`' % return_val )
         return return_val
 
     def check_ip( self, client_ip ):
@@ -29,7 +29,7 @@ class HelperV1( object ):
         if client_ip in settings_app.LEGIT_IPS:
             return True
         else:
-            log.debug( 'bad ip, `%s`' % client_ip )
+            log.warning( 'bad ip, `%s`' % client_ip )
             return False
 
     def check_params( self, request ):

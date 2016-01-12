@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-import os
+import json, os
 
 
-FOO = 'BAR'
-
-FOO2 = os.environ['FOO2']
+LEGIT_IPS = json.loads( os.environ['XSL__LEGIT_IPS_JSON'] )
