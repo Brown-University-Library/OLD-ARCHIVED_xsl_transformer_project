@@ -122,20 +122,6 @@ class Transformer( object ):
         log.debug( 'transformed_xml, ```%s```' % transformed_xml )
         return transformed_xml
 
-    # def execute_transform( self, temp_xml_path, temp_xsl_path, temp_output_file_reference ):
-    #     """ Calls saxon and returns the transform result.
-    #         Called by transform() """
-    #     temp_output_path = temp_output_file_reference.name
-    #     log.debug( 'temp_output_path, `%s`' % temp_output_path )
-    #     command = 'java -cp %s net.sf.saxon.Transform -t -s:"%s" -xsl:"%s" -o:"%s"' % (
-    #         settings_app.SAXON_CLASSPATH, temp_xml_path, temp_xsl_path, temp_output_path )
-    #     log.debug( 'command, `%s`' % command )
-    #     subprocess.call( [command, '-1'], shell=True )
-    #     with open( temp_output_path ) as f:
-    #         transformed_xml = f.read()
-    #     log.debug( 'transformed_xml, ```%s```' % transformed_xml )
-    #     return transformed_xml
-
     # def transform( self, xml_data, xsl_data ):
     #     """ Manages the transform and returns output. """
     #     assert type(xml_data) == str
