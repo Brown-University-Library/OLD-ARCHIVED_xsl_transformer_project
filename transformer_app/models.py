@@ -76,30 +76,76 @@ class Transformer( object ):
     """ Handles transform code. """
 
     def transform( self, xml_data, xsl_data ):
-        """ Manages the transform and returns output. """
-        assert type(xml_data) == str
-        assert type(xsl_data) == str
+        """ Manages the transform and returns output.
+            Assumes incoming xml_data and xsl_data are utf-8 encoded.
+            Great tempfile resource: <https://pymotw.com/2/tempfile/> """
+        assert type(xml_data) == str; assert type(xsl_data) == str
         ( temp_xml_path, temp_xsl_path, temp_output_path, transformed_xml ) = ( '', '', '', '' )
-        with tempfile.NamedTemporaryFile() as temp_xml:
-            temp_xml_path = temp_xml.name
-            log.debug( 'temp_xml_path, `%s`' % temp_xml_path )
-            temp_xml.write( xml_data )
-            temp_xml.flush()
-            with tempfile.NamedTemporaryFile() as temp_xsl:
-                temp_xsl_path = temp_xsl.name
-                log.debug( 'temp_xsl_path, `%s`' % temp_xsl_path )
-                temp_xsl.write( xsl_data )
-                temp_xsl.flush()
-                with tempfile.NamedTemporaryFile() as temp_output:
-                    temp_output_path = temp_output.name
-                    log.debug( 'temp_output_path, `%s`' % temp_output_path )
-                    command = 'java -cp %s net.sf.saxon.Transform -t -s:"%s" -xsl:"%s" -o:"%s"' % (
-                        settings_app.SAXON_CLASSPATH, temp_xml_path, temp_xsl_path, temp_output_path )
-                    log.debug( 'command, `%s`' % command )
-                    subprocess.call( [command, '-1'], shell=True )
-                    with open( temp_output_path ) as f:
-                        transformed_xml = f.read()
-                        log.debug( 'transformed_xml, ```%s```' % transformed_xml )
+        with tempfile.NamedTemporaryFile() as temp_xml_file_reference:
+            temp_xml_path = self.write_xml( temp_xml_file_reference, xml_data )
+            with tempfile.NamedTemporaryFile() as temp_xsl_file_reference:
+                temp_xsl_path = self.write_xsl( temp_xsl_file_reference, xsl_data )
+                with tempfile.NamedTemporaryFile() as temp_output_file_reference:
+                    transformed_xml = self.execute_transform( temp_xml_path, temp_xsl_path, temp_output_file_reference )
         return transformed_xml
+
+    def write_xml( self, temp_xml_file_reference, xml_data ):
+        """ Writes xml-string to temp object & returns path.
+            Called by transform() """
+        temp_xml_path = temp_xml_file_reference.name
+        log.debug( 'temp_xml_path, `%s`' % temp_xml_path )
+        temp_xml_file_reference.write( xml_data )
+        temp_xml_file_reference.flush()
+        return temp_xml_path
+
+    def write_xsl( self, temp_xsl_file_reference, xsl_data ):
+        """ Writes xsl-string to temp object & returns path.
+            Called by transform() """
+        temp_xsl_path = temp_xsl_file_reference.name
+        log.debug( 'temp_xsl_path, `%s`' % temp_xsl_path )
+        temp_xsl_file_reference.write( xsl_data )
+        temp_xsl_file_reference.flush()
+        return temp_xsl_path
+
+    def execute_transform( self, temp_xml_path, temp_xsl_path, temp_output_file_reference ):
+        """ Calls saxon and returns the transform result.
+            Called by transform() """
+        temp_output_path = temp_output_file_reference.name
+        log.debug( 'temp_output_path, `%s`' % temp_output_path )
+        command = 'java -cp %s net.sf.saxon.Transform -t -s:"%s" -xsl:"%s" -o:"%s"' % (
+            settings_app.SAXON_CLASSPATH, temp_xml_path, temp_xsl_path, temp_output_path )
+        log.debug( 'command, `%s`' % command )
+        subprocess.call( [command, '-1'], shell=True )
+        with open( temp_output_path ) as f:
+            transformed_xml = f.read()
+            log.debug( 'transformed_xml, ```%s```' % transformed_xml )
+        return transformed_xml
+
+    # def transform( self, xml_data, xsl_data ):
+    #     """ Manages the transform and returns output. """
+    #     assert type(xml_data) == str
+    #     assert type(xsl_data) == str
+    #     ( temp_xml_path, temp_xsl_path, temp_output_path, transformed_xml ) = ( '', '', '', '' )
+    #     with tempfile.NamedTemporaryFile() as temp_xml:
+    #         temp_xml_path = temp_xml.name
+    #         log.debug( 'temp_xml_path, `%s`' % temp_xml_path )
+    #         temp_xml.write( xml_data )
+    #         temp_xml.flush()
+    #         with tempfile.NamedTemporaryFile() as temp_xsl:
+    #             temp_xsl_path = temp_xsl.name
+    #             log.debug( 'temp_xsl_path, `%s`' % temp_xsl_path )
+    #             temp_xsl.write( xsl_data )
+    #             temp_xsl.flush()
+    #             with tempfile.NamedTemporaryFile() as temp_output:
+    #                 temp_output_path = temp_output.name
+    #                 log.debug( 'temp_output_path, `%s`' % temp_output_path )
+    #                 command = 'java -cp %s net.sf.saxon.Transform -t -s:"%s" -xsl:"%s" -o:"%s"' % (
+    #                     settings_app.SAXON_CLASSPATH, temp_xml_path, temp_xsl_path, temp_output_path )
+    #                 log.debug( 'command, `%s`' % command )
+    #                 subprocess.call( [command, '-1'], shell=True )
+    #                 with open( temp_output_path ) as f:
+    #                     transformed_xml = f.read()
+    #                     log.debug( 'transformed_xml, ```%s```' % transformed_xml )
+    #     return transformed_xml
 
     # end class Transformer
