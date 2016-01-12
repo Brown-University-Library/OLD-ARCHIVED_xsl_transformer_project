@@ -38,8 +38,10 @@ class Transformer_Test( TestCase ):
             </html>
           </xsl:template>
         </xsl:stylesheet>'''.encode('utf-8')
+        returned_html = self.tran.transform( XML_DATA, XSL_DATA )
         self.assertEqual(
-            'foo',
-            self.tran.transform( XML_DATA, XSL_DATA ) )
+            '<html><body><p><b>Tom</b></p><p><b>Dick</b></p><p><b>Harry</b></p></body></html>',
+            returned_html.replace( ' ', '' ).replace( '\n', '' )
+            )
 
     # end class Transformer_Test
