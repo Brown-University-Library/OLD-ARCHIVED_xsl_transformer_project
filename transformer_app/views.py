@@ -11,7 +11,14 @@ from django.shortcuts import get_object_or_404, render
 log = logging.getLogger(__name__)
 
 
+
 def hi( request ):
     """ Returns simplest response. """
     now = datetime.datetime.now()
     return HttpResponse( '<p>hi</p> <p>( %s )</p>' % now )
+
+
+def run_transform_v1 ( request ):
+    """ Manages transform flow. """
+    log.debug( 'starting' )
+    return HttpResponse( '<p>foo</p> <p>( %s )</p>' % now )
