@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-import datetime, json, logging, os, pprint, itertools
+import datetime, json, logging, os, pprint, subprocess, tempfile
 from . import settings_app
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -75,7 +75,62 @@ class ViewHelper( object ):
 class Transformer( object ):
     """ Handles transform code. """
 
-    def foo( self ):
-        return 'bar'
+    def transform( self, xml_data, xsl_data ):
+        """ Manages the transform and returns output. """
+        assert type(xml_data) == str
+        assert type(xsl_data) == str
+        ( temp_xml_path, temp_xsl_path, temp_output_path, transformed_xml ) = ( '', '', '', '' )
+        with tempfile.NamedTemporaryFile() as temp_xml:
+            temp_xml_path = temp_xml.name
+            log.debug( 'temp_xml_path, `%s`' % temp_xml_path )
+            log.debug( 'first os.path.exists(temp_xml_path), `%s`' % os.path.exists(temp_xml_path) )
+            temp_xml.write( xml_data )
+            temp_xml.flush()
+            with tempfile.NamedTemporaryFile() as temp_xsl:
+                temp_xsl_path = temp_xsl.name
+                log.debug( 'temp_xsl_path, `%s`' % temp_xsl_path )
+                temp_xsl.write( xsl_data )
+                temp_xsl.flush()
+                with tempfile.NamedTemporaryFile() as temp_output:
+                    temp_output_path = temp_output.name
+                    log.debug( 'temp_output_path, `%s`' % temp_output_path )
+                    log.debug( 'second os.path.exists(temp_xml_path), `%s`' % os.path.exists(temp_xml_path) )
+                    command = 'java -cp %s net.sf.saxon.Transform -t -s:"%s" -xsl:"%s" -o:"%s"' % (
+                        settings_app.SAXON_CLASSPATH, temp_xml_path, temp_xsl_path, temp_output_path )
+                    log.debug( 'command, `%s`' % command )
+                    subprocess.call( [command, '-1'], shell=True )
+                    with open( temp_output_path ) as f:
+                        transformed_xml = f.read()
+                        log.debug( 'transformed_xml, ```%s```' % transformed_xml )
+        return transformed_xml
+
+    # def transform( self, xml_data, xsl_data ):
+    #     """ Manages the transform and returns output. """
+    #     assert type(xml_data) == str
+    #     assert type(xsl_data) == str
+    #     ( temp_xml_path, temp_xsl_path, temp_output_path, transformed_xml ) = ( '', '', '', '' )
+    #     with tempfile.NamedTemporaryFile() as temp_xml:
+    #         temp_xml_path = temp_xml.name
+    #         log.debug( 'temp_xml_path, `%s`' % temp_xml_path )
+    #         log.debug( 'first os.path.exists(temp_xml_path), `%s`' % os.path.exists(temp_xml_path) )
+    #         temp_xml.write( xml_data )
+    #         temp_xml.flush()
+    #     log.debug( 'second os.path.exists(temp_xml_path), `%s`' % os.path.exists(temp_xml_path) )
+    #     with tempfile.NamedTemporaryFile() as temp_xsl:
+    #         temp_xsl_path = temp_xsl.name
+    #         log.debug( 'temp_xsl_path, `%s`' % temp_xsl_path )
+    #         temp_xsl.write( xsl_data )
+    #         temp_xsl.flush()
+    #     with tempfile.NamedTemporaryFile() as temp_output:
+    #         temp_output_path = temp_output.name
+    #         log.debug( 'temp_output_path, `%s`' % temp_output_path )
+    #         command = 'java -cp %s net.sf.saxon.Transform -t -s:"%s" -xsl:"%s" -o:"%s"' % (
+    #             settings_app.SAXON_CLASSPATH, temp_xml_path, temp_xsl_path, temp_output_path )
+    #         subprocess.call( [command, '-1'], shell=True )
+    #         with open( temp_output_path ) as f:
+    #             transformed_xml = f.read()
+    #             log.debug( 'transformed_xml, ```%s```' % transformed_xml )
+    #         temp_output.flush()
+    #     return transformed_xml
 
     # end class Transformer
