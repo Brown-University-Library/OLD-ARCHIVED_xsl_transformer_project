@@ -11,6 +11,8 @@ urlpatterns = patterns('',
 
     url( r'^info/$',  'transformer_app.views.hi', name='info_url' ),
 
+    url( r'^keymaker/$',  'transformer_app.views.keymaker', name='keymaker_url' ),
+
     url( r'^$',  RedirectView.as_view(pattern_name='info_url') ),
 
     )

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-import datetime, json, logging, os, pprint
+import datetime, json, logging, os, pprint, random
 from django.conf import settings as project_settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
@@ -34,5 +34,11 @@ def run_transform_v1 ( request ):
         resp = view_helper.build_post_response( data )
     return resp
 
-    # now = datetime.datetime.now()
-    # return HttpResponse( '<p>foo</p> <p>( %s )</p>' % now )
+
+def keymaker( request ):
+    """ Makes keys; convenience for auth-key generation. """
+    rndm = random.SystemRandom()
+    ALLOWED_CHARACTERS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789'  # oft-mistaken chars left out
+    LENGTH = 50
+    key = ''.join( rndm.choice(ALLOWED_CHARACTERS) for i in range(LENGTH) )
+    return HttpResponse( key, content_type='text/text' )

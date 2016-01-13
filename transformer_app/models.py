@@ -15,26 +15,52 @@ log = logging.getLogger(__name__)
 class Validator( object ):
     """ Supports view.run_transform_v1() """
 
+    # def __init__( self ):
+    #     self.LEGIT_IPS = [ val['legit_ip'] for (key, val) in (settings_app.LEGIT_IPS_KEYS.items()) ]
+
     def check_validity( self, request ):
         """ Checks ip & params.
+            GETs with an auth_key of 'shib' require a valid developer shib-login.
+            Other GETs, and POSTs, require a valid ip and auth_key.
             Called by views.run_transform_v1() """
         log.debug( 'starting check_validity()' )
         return_val = False
-        if self.check_ip( unicode(request.META.get('REMOTE_ADDR', 'unavailable')) ) == True and self.check_params( request ) == True:
+        ( ip_key_check, params_check ) = ( self.check_ip_key(request), self.check_params(request) )
+        if ip_key_check == True and params_check == True:
             return_val = True
         log.debug( 'return_val, `%s`' % return_val )
         return return_val
 
-    def check_ip( self, client_ip ):
-        """ Validates ip.
+    # def check_ip( self, request ):
+    #     """ Validates ip.
+    #         Called by check_validity() """
+    #     return_val = False
+    #     ( auth_key, client_ip ) = ( request.GET.get('auth_key', 'unavailable'), request.META.get('REMOTE_ADDR', 'unavailable') )
+    #     if request.method == 'GET' and auth_key == 'shib':
+    #         return_val = True
+    #     elif client_ip in self.LEGIT_IPS:
+    #         return_val = True
+    #     else:
+    #         log.warning( 'bad ip, `%s`' % client_ip )
+    #     log.debug( 'ip, `%s` has return_val, `%s`' % (client_ip, return_val) )
+    #     return return_val
+
+    def check_ip_key( self, request ):
+        """ Validates auth_key.
             Called by check_validity() """
+        log.debug( 'settings_app.LEGIT_IPS_KEYS, ```%s```' % pprint.pformat(settings_app.LEGIT_IPS_KEYS) )
         return_val = False
-        if client_ip in settings_app.LEGIT_IPS:
+        ( client_ip, auth_key ) = ( request.META.get('REMOTE_ADDR', 'unavailable'), request.GET.get('auth_key', 'unavailable') )
+        if auth_key == 'shib':
             return_val = True
         else:
-            log.warning( 'bad ip, `%s`' % client_ip )
-            return_val = False
-        log.debug( 'ip, `%s` has return_val, `%s`' % (client_ip, return_val) )
+            for ( label, dct ) in settings_app.LEGIT_IPS_KEYS.items():
+                # log.debug( 'entry, ```%s```' % entry )
+                if dct['legit_ip'] == client_ip and dct['ip_auth_key'] == auth_key:
+                    return_val = True
+                    break
+        # log.debug( 'return_val, `%s`' % return_val )
+        log.debug( 'client_ip, `%s`; auth_key, `%s` has return_val, `%s`' % (client_ip, auth_key, return_val) )
         return return_val
 
     def check_params( self, request ):
