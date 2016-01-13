@@ -86,7 +86,7 @@ class Transformer( object ):
     """ Handles transform code. """
 
     def transform( self, xml_data, xsl_data ):
-        """ Manages the transform and returns output.
+        """ Manages the transform and returns (unicode) output.
             With statements are nested because each temporary file object will disappear once its with-block completes.
             Great tempfile resource: <https://pymotw.com/2/tempfile/> """
         assert type(xml_data) == unicode
@@ -127,7 +127,7 @@ class Transformer( object ):
         log.debug( 'command, `%s`' % command )
         subprocess.call( [command, '-1'], shell=True )
         temp_output_file_reference.flush()
-        transformed_xml = temp_output_file_reference.read().decode('utf-8')
+        transformed_xml = temp_output_file_reference.read().decode('utf-8')  # saxon produces byte-string output
         log.debug( 'type(transformed_xml), `%s`; transformed_xml, ```%s```' % (type(transformed_xml), transformed_xml) )
         return transformed_xml
 
