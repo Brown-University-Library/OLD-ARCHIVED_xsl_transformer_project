@@ -21,14 +21,14 @@ class Transformer_Test( TestCase ):
         """ Tests creation of tmp xml, xsl, and output files. """
         XML_DATA = '''<?xml version="1.0" encoding="UTF-8"?>
         <class>
-          <student>Tom</student>
-          <student>Dick</student>
-          <student>Harry</student>
-        </class>'''.encode('utf-8')
+          <student>Tôm</student>
+          <student>Dĭck</student>
+          <student>Hârry</student>
+        </class>'''
         XSL_DATA = '''<?xml version="1.0" ?>
         <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
           <xsl:template match="student">
-            <p><b><xsl:value-of select="."/></b></p>
+            <p><xsl:value-of select="."/></p>
           </xsl:template>
           <xsl:template match="/">
             <html>
@@ -37,11 +37,17 @@ class Transformer_Test( TestCase ):
             </body>
             </html>
           </xsl:template>
-        </xsl:stylesheet>'''.encode('utf-8')
-        returned_html = self.tran.transform( XML_DATA, XSL_DATA )
+        </xsl:stylesheet>'''
+        transformed_output = self.tran.transform( XML_DATA, XSL_DATA )
         self.assertEqual(
-            '<html><body><p><b>Tom</b></p><p><b>Dick</b></p><p><b>Harry</b></p></body></html>',
-            returned_html.replace( ' ', '' ).replace( '\n', '' )
+            unicode,
+            type(transformed_output)
+            )
+        single_line_transformed_output = transformed_output.replace( ' ', '' ).replace( '\n', '' )
+        print single_line_transformed_output
+        self.assertEqual(
+            '<html><body><p>T\xf4m</p><p>D\u012dck</p><p>H\xe2rry</p></body></html>',  # prints as <html><body><p>Tôm</p><p>Dĭck</p><p>Hârry</p></body></html>
+            single_line_transformed_output
             )
 
     # end class Transformer_Test
