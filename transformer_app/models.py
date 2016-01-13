@@ -98,9 +98,9 @@ class DataGrabber( object ):
         """ Manages getting the xml and xsl data, and returning it in unicode.
             Called by ViewHelper.handle_get() """
         r_xml = requests.get( xml_url )
-        xml_data = r_xml.text
+        xml_data = r_xml.content.decode( 'utf-8' )
         r_xsl = requests.get( xsl_url )
-        xsl_data = r_xsl.text
+        xsl_data = r_xsl.content.decode( 'utf-8' )
         return ( xml_data, xsl_data )
 
     # end class DataGrabber
