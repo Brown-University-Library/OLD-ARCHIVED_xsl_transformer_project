@@ -64,10 +64,20 @@ class ViewHelper( object ):
         return HttpResponse( 'not yet implemented' )
 
     def handle_post( self, request ):
-        return 'foo'
+        """ Calls Transformer()
+            Called by views.run_transform_v1() """
+        transformer = Transformer()
+        xml_data = request.POST['xml']
+        xsl_data = request.POST['xsl']
+        transformed_xml = transformer.transform( xml_data, xsl_data )
+        return transformed_xml
 
     def build_post_response( self, data ):
-        return HttpResponse( 'not yet implemented' )
+        """ Builds POST response.
+            Content-type info: <http://www.w3.org/TR/xhtml-media-types/>
+            Called by views.run_transform_v1() """
+        resp = HttpResponse( data, content_type='application/xhtml+xml' )
+        return resp
 
     # end class ViewHelper
 
@@ -77,11 +87,10 @@ class Transformer( object ):
 
     def transform( self, xml_data, xsl_data ):
         """ Manages the transform and returns output.
-            Assumes incoming xml_data and xsl_data are utf-8 encoded.
             With statements are nested because each temporary file object will disappear once its with-block completes.
             Great tempfile resource: <https://pymotw.com/2/tempfile/> """
-        assert type(xml_data) == str
-        assert type(xsl_data) == str
+        assert type(xml_data) == unicode
+        assert type(xsl_data) == unicode
         with tempfile.NamedTemporaryFile() as temp_xml_file_reference:
             temp_xml_path = self.write_xml( temp_xml_file_reference, xml_data )
             with tempfile.NamedTemporaryFile() as temp_xsl_file_reference:
@@ -95,7 +104,7 @@ class Transformer( object ):
             Called by transform() """
         temp_xml_path = temp_xml_file_reference.name
         log.debug( 'temp_xml_path, `%s`' % temp_xml_path )
-        temp_xml_file_reference.write( xml_data )
+        temp_xml_file_reference.write( xml_data.encode('utf-8') )
         temp_xml_file_reference.flush()  # <http://stackoverflow.com/questions/7127075/what-exactly-the-pythons-file-flush-is-doing>
         return temp_xml_path
 
@@ -104,7 +113,7 @@ class Transformer( object ):
             Called by transform() """
         temp_xsl_path = temp_xsl_file_reference.name
         log.debug( 'temp_xsl_path, `%s`' % temp_xsl_path )
-        temp_xsl_file_reference.write( xsl_data )
+        temp_xsl_file_reference.write( xsl_data.encode('utf-8') )
         temp_xsl_file_reference.flush()
         return temp_xsl_path
 
@@ -118,8 +127,8 @@ class Transformer( object ):
         log.debug( 'command, `%s`' % command )
         subprocess.call( [command, '-1'], shell=True )
         temp_output_file_reference.flush()
-        transformed_xml = temp_output_file_reference.read()
-        log.debug( 'transformed_xml, ```%s```' % transformed_xml )
+        transformed_xml = temp_output_file_reference.read().decode('utf-8')
+        log.debug( 'type(transformed_xml), `%s`; transformed_xml, ```%s```' % (type(transformed_xml), transformed_xml) )
         return transformed_xml
 
     # def transform( self, xml_data, xsl_data ):
