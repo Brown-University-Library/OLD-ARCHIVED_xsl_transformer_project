@@ -44,7 +44,7 @@ class Transformer_Test( TestCase ):
             type(transformed_output)
             )
         single_line_transformed_output = transformed_output.replace( ' ', '' ).replace( '\n', '' )
-        print single_line_transformed_output
+        # print single_line_transformed_output
         self.assertEqual(
             '<html><body><p>T\xf4m</p><p>D\u012dck</p><p>H\xe2rry</p></body></html>',  # prints as <html><body><p>Tôm</p><p>Dĭck</p><p>Hârry</p></body></html>
             single_line_transformed_output
