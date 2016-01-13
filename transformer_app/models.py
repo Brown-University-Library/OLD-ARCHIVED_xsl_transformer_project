@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 import datetime, json, logging, os, pprint, subprocess, tempfile
+import requests
 from . import settings_app
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -58,13 +59,22 @@ class ViewHelper( object ):
     """ Handles transform code. """
 
     def handle_get( self, request ):
-        return 'foo'
+        """ Calls DataGrabber() and Transformer() to prepare data.
+            Called by views.run_transform_v1() """
+        ( data_grabber, transformer ) = ( DataGrabber(), Transformer() )
+        ( xml_data, xsl_data ) = data_grabber.grab_data( request.GET['xml_url'], request.GET['xsl_url'] )
+        transformed_xml = transformer.transform( xml_data, xsl_data )
+        return transformed_xml
 
     def build_get_response( self, data ):
-        return HttpResponse( 'not yet implemented' )
+        """ Builds GET response.
+            Content-type info: <http://www.w3.org/TR/xhtml-media-types/>
+            Called by views.run_transform_v1() """
+        resp = HttpResponse( data, content_type='application/xhtml+xml' )
+        return resp
 
     def handle_post( self, request ):
-        """ Calls Transformer()
+        """ Calls Transformer() to prepare data.
             Called by views.run_transform_v1() """
         transformer = Transformer()
         xml_data = request.POST['xml']
@@ -74,12 +84,26 @@ class ViewHelper( object ):
 
     def build_post_response( self, data ):
         """ Builds POST response.
-            Content-type info: <http://www.w3.org/TR/xhtml-media-types/>
             Called by views.run_transform_v1() """
         resp = HttpResponse( data, content_type='application/xhtml+xml' )
         return resp
 
     # end class ViewHelper
+
+
+class DataGrabber( object ):
+    """ Grabs GET xml and xsl from urls. """
+
+    def grab_data( self, xml_url, xsl_url ):
+        """ Manages getting the xml and xsl data, and returning it in unicode.
+            Called by ViewHelper.handle_get() """
+        r_xml = requests.get( xml_url )
+        xml_data = r_xml.text
+        r_xsl = requests.get( xsl_url )
+        xsl_data = r_xsl.text
+        return ( xml_data, xsl_data )
+
+    # end class DataGrabber
 
 
 class Transformer( object ):
@@ -88,7 +112,8 @@ class Transformer( object ):
     def transform( self, xml_data, xsl_data ):
         """ Manages the transform and returns (unicode) output.
             With statements are nested because each temporary file object will disappear once its with-block completes.
-            Great tempfile resource: <https://pymotw.com/2/tempfile/> """
+            Great tempfile resource: <https://pymotw.com/2/tempfile/>
+            Called by ViewHelper.handle_get() & ViewHelper.handle_post() """
         assert type(xml_data) == unicode
         assert type(xsl_data) == unicode
         with tempfile.NamedTemporaryFile() as temp_xml_file_reference:
