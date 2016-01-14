@@ -41,4 +41,7 @@ def keymaker( request ):
     ALLOWED_CHARACTERS = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789'  # oft-mistaken chars left out
     LENGTH = 50
     key = ''.join( rndm.choice(ALLOWED_CHARACTERS) for i in range(LENGTH) )
-    return HttpResponse( key, content_type='text/text' )
+    ip = request.META.get('REMOTE_ADDR', 'unavailable')
+    output = { 'your_ip': ip, 'random_key': key }
+    output = json.dumps( output, sort_keys=True, indent=2 )
+    return HttpResponse( output, content_type='application/json; charset=utf-8' )
