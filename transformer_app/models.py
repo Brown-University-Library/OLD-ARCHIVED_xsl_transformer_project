@@ -36,10 +36,7 @@ class Validator( object ):
         if auth_key == 'shib':
             return_val = True
         else:
-            for ( label, dct ) in settings_app.LEGIT_IPS_KEYS.items():
-                if dct['legit_ip'] == client_ip and dct['auth_key'] == auth_key:
-                    return_val = True
-                    break
+            return_val = self._check_non_shib_info( client_ip, auth_key )
         log.debug( 'client_ip, `%s`; auth_key, `%s` has return_val, `%s`' % (client_ip, auth_key, return_val) )
         return return_val
 
@@ -53,6 +50,18 @@ class Validator( object ):
             auth_key = request.POST.get('auth_key', 'unavailable')
         log.debug( '(client_ip, auth_key), ```%s```' % pprint.pformat((client_ip, auth_key)) )
         return ( client_ip, auth_key )
+
+    def _check_non_shib_info( self, client_ip, auth_key ):
+        """ Checks non-shib auth_key against client_ip.
+            Called by check_ip_key() """
+        return_val = False
+        for ( label, dct ) in settings_app.LEGIT_IPS_KEYS.items():
+            log.debug( '(label, dct), ```%s```' % pprint.pformat((label, dct)) )
+            if dct['legit_ip'] == client_ip and dct['auth_key'] == auth_key:
+                return_val = True
+                break
+        log.debug( 'return_val, `%s`' % return_val )
+        return return_val
 
     def check_params( self, request ):
         """ Validates params.
