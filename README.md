@@ -1,11 +1,16 @@
-##### overview #####
+### overview ###
 
-(UNDER CONSTRUCTION)
+This [django](https://www.djangoproject.com) application runs [xslt](https://en.wikipedia.org/wiki/XSLT) (2.0 compatible) transformations, and returns the results.
 
-[django](https://www.djangoproject.com) application that (will) runs [xslt](https://en.wikipedia.org/wiki/XSLT) (2.0 compatible) transformations, and returns the results.
+Programming languages generally have easy standard ways to apply xslt 1.0 transformations, but may not for xslt 2.0 transformations. This service meets that need.
 
+On this page:
 
-##### security note #####
+- security note
+- usage
+- notes
+
+### security note ###
 
 Run this internally, with trusted xml and xsl files, to avoid xsl security vulnerabilites.
 
@@ -13,7 +18,7 @@ Run this internally, with trusted xml and xsl files, to avoid xsl security vulne
 - see [OWASP pdf](https://www.owasp.org/images/a/ae/OWASP_Switzerland_Meeting_2015-06-17_XSLT_SSRF_ENG.pdf) on xsl security vulnerabilities.
 
 
-##### usage #####
+### usage ###
 
 You can supply GET xsl and xml urls to web-accessible utf-8 encoded files, or you can POST utf-8 xsl-data and utf-8 xml-data.
 
@@ -24,11 +29,12 @@ You can supply GET xsl and xml urls to web-accessible utf-8 encoded files, or yo
         from __future__ import unicode_literals
         import requests
 
-        URL = 'http://127.0.0.1/xsl_transformer/v1/'
+        URL = 'https://host/xsl_transformer/v1/'
 
         parameters = {
             'xml_url': 'https://url/to/source.xml',
-            'xsl_url': 'https://url/to/stylesheet.xsl'
+            'xsl_url': 'https://url/to/stylesheet.xsl',
+            'auth_key': 'the_auth_key'
             }
         r = requests.get( URL, params=parameters )
 
@@ -60,11 +66,12 @@ You can supply GET xsl and xml urls to web-accessible utf-8 encoded files, or yo
           </xsl:template>
         </xsl:stylesheet>'''.encode('utf-8')
 
-        URL = 'http://127.0.0.1/xsl_transformer/v1/'
+        URL = 'https://host/xsl_transformer/v1/'
 
         parameters = {
             'xml': EXAMPLE_XML,
-            'xsl': EXAMPLE_XSL
+            'xsl': EXAMPLE_XSL,
+            'auth_key': 'the_auth_key'
             }
         r = requests.post( URL, data=parameters )
         print r.content
@@ -82,6 +89,19 @@ You can supply GET xsl and xml urls to web-accessible utf-8 encoded files, or yo
         #
         #    </body>
         # </html>
+
+
+## Notes ##
+
+- this transformer uses [saxon](http://sourceforge.net/projects/saxon/files/), an xslt 2.0 transformer. Note that there [some problems](http://www.w3.org/TR/xslt20/#changes) may arise using this xslt 2.0 transformer on an xslt 1.0 stylesheet.
+
+- an auth_key, for POSTs and GETs, is linked to an IP. Developers can see their ip, and get a randomly generated key which can be added to the app's settings file, at:
+
+        https://host/xsl_transformer/keymaker/
+
+- for convenience, specified users can test transformation output interactively by using authkey=shib at the url:
+
+        https://host/xsl_transformer/v1/shib/?xml_url=...&xsl_url=...&auth_key=shib
 
 
 ---
