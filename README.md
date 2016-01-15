@@ -10,6 +10,7 @@ On this page:
 - usage
 - notes
 
+
 ### security note ###
 
 Run this internally, with trusted xml and xsl files, to avoid xsl security vulnerabilites.
@@ -93,7 +94,7 @@ You can supply GET xsl and xml urls to web-accessible utf-8 encoded files, or yo
 
 ## Notes ##
 
-- an auth_key, for POSTs and GETs, is linked to an IP. Developers can see their ip, and get a randomly generated key which can be added to the app's settings file, at:
+- an auth_key, for POSTs and GETs, is linked to an IP. For convenience, developers can see their ip, and get a randomly generated key which can be added to the app's settings file, at:
 
         https://host/xsl_transformer/keymaker/
 
