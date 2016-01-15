@@ -69,11 +69,11 @@ class Validator( object ):
         return_val = False
         if request.method == 'POST':
             log.debug( 'sorted(request.POST.keys()), ```%s```' % pprint.pformat(sorted(request.POST.keys())) )
-            if sorted( request.POST.keys() ) == settings_app.LEGIT_POST_KEYS:
+            if sorted( request.POST.keys() ) == [ 'auth_key', 'xml', 'xsl' ]:
                 return_val = True
         elif request.method == 'GET':
             log.debug( 'sorted(request.GET.keys()), ```%s```' % pprint.pformat(sorted(request.GET.keys())) )
-            if sorted( request.GET.keys() ) == settings_app.LEGIT_GET_KEYS:
+            if sorted( request.GET.keys() ) == [ 'auth_key', 'xml_url', 'xsl_url' ]:
                 return_val = True
         log.debug( 'return_val, `%s`' % return_val )
         return return_val
