@@ -56,7 +56,7 @@ class Validator( object ):
             Called by check_ip_key() """
         return_val = False
         for ( label, dct ) in settings_app.LEGIT_IPS_KEYS.items():
-            log.debug( '(label, dct), ```%s```' % pprint.pformat((label, dct)) )
+            log.debug( 'label, `%s`; the-dct, `%s`' % (label, dct) )
             if dct['legit_ip'] == client_ip and dct['auth_key'] == auth_key:
                 return_val = True
                 break
