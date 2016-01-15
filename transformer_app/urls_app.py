@@ -8,7 +8,7 @@ from django.views.generic import RedirectView
 urlpatterns = patterns('',
 
     url( r'^v1/$',  'transformer_app.views.run_transform_v1', name='transformer_v1_url' ),
-    url( r'^v1/shib$',  'transformer_app.views.run_transform_v1', name='transformer_v1_url' ),
+    url( r'^v1/shib/$',  'transformer_app.views.run_transform_v1', name='transformer_v1_url' ),
 
     url( r'^info/$',  'transformer_app.views.hi', name='info_url' ),
 
