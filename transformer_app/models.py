@@ -31,9 +31,10 @@ class Validator( object ):
     def check_ip_key( self, request ):
         """ Validates auth_key.
             Called by check_validity() """
+        # log.debug( 'request.META, `%s`' % pprint.pformat(request.META) )
         return_val = False
         ( client_ip, auth_key ) = self._get_auth_info( request )
-        if auth_key == 'shib':
+        if auth_key == 'shib' and request.META.get('PATH_INFO', 'unavailable') == '/v1/shib/':
             return_val = True
         else:
             return_val = self._check_non_shib_info( client_ip, auth_key )
