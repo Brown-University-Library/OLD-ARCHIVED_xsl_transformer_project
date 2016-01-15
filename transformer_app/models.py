@@ -31,6 +31,7 @@ class Validator( object ):
     def check_ip_key( self, request ):
         """ Validates auth_key.
             Called by check_validity() """
+        return_val = False
         ( client_ip, auth_key ) = self._get_auth_info( request )
         if auth_key == 'shib':
             return_val = True
