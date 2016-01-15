@@ -93,8 +93,6 @@ You can supply GET xsl and xml urls to web-accessible utf-8 encoded files, or yo
 
 ## Notes ##
 
-- this transformer uses [saxon](http://sourceforge.net/projects/saxon/files/), an xslt 2.0 transformer. Note that there [some problems](http://www.w3.org/TR/xslt20/#changes) may arise using this xslt 2.0 transformer on an xslt 1.0 stylesheet.
-
 - an auth_key, for POSTs and GETs, is linked to an IP. Developers can see their ip, and get a randomly generated key which can be added to the app's settings file, at:
 
         https://host/xsl_transformer/keymaker/
