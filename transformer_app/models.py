@@ -134,21 +134,6 @@ class ViewHelper( object ):
         resp = HttpResponse( data, content_type=content_type )
         return resp
 
-    # def build_post_response( self, data ):
-    #     """ Builds POST response.
-    #         Called by views.run_transform_v1() """
-    #     resp = HttpResponse( data, content_type='application/xhtml+xml' )
-    #     return resp
-
-    # def build_post_response( self, data ):
-    #     """ Builds POST response.
-    #         Called by views.run_transform_v1() """
-    #     content_type='application/xhtml+xml'
-    #     if self.checker.check_xml( data ) == False:
-    #         content_type='text/text'
-    #     resp = HttpResponse( data, content_type=content_type )
-    #     return resp
-
     # end class ViewHelper
 
 
