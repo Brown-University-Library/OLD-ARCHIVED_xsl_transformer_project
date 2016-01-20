@@ -2,13 +2,12 @@
 
 from __future__ import unicode_literals
 import logging
-from .models import Transformer
+from .models import Transformer, XMLchecker
 from django.test import TestCase
 
 
 log = logging.getLogger(__name__)
 TestCase.maxDiff = None
-
 
 
 class Transformer_Test( TestCase ):
@@ -51,3 +50,40 @@ class Transformer_Test( TestCase ):
             )
 
     # end class Transformer_Test
+
+
+class XMLchecker_Test( TestCase ):
+    """ Tests models.XMLchecker() """
+
+    def setUp( self ):
+        self.checker = XMLchecker()
+
+    def test_check_non_xml( self ):
+        """ Tests well-formedness checker with bad xml. """
+        transformed_output = 'foo'
+        self.assertEqual(
+            False,
+            self.checker.check_xml( transformed_output )
+            )
+
+    def test_check_good_xml( self ):
+        """ Tests well-formedness checker with good xml. """
+        transformed_output = '''
+            <html>
+               <body>
+
+                  <p>Tôm</p>
+
+                  <p>Dĭck</p>
+
+                  <p>Hârry</p>
+
+               </body>
+            </html>
+            '''
+        self.assertEqual(
+            True,
+            self.checker.check_xml( transformed_output )
+            )
+
+    # end class XMLchecker_Test

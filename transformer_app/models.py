@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+#
 import datetime, json, logging, os, pprint, subprocess, tempfile, urllib, urlparse
+from xml.etree import ElementTree
+#
 import requests
 from . import settings_app
 from django.core.urlresolvers import reverse
@@ -13,7 +16,7 @@ log = logging.getLogger(__name__)
 
 
 class Validator( object ):
-    """ Supports view.run_transform_v1() """
+    """ Validates views.run_transform_v1() input. """
 
     def check_validity( self, request ):
         """ Checks ip & params.
@@ -99,7 +102,10 @@ class Validator( object ):
 
 
 class ViewHelper( object ):
-    """ Handles transform code. """
+    """ Manages logic-flow for views.run_transform_v1() """
+
+    def __init__( self ):
+        self.checker = XMLchecker()
 
     def handle_get( self, request ):
         """ Calls DataGrabber() and Transformer() to prepare data.
@@ -108,13 +114,6 @@ class ViewHelper( object ):
         ( xml_data, xsl_data ) = data_grabber.grab_data( request.GET['xml_url'], request.GET['xsl_url'] )
         transformed_xml = transformer.transform( xml_data, xsl_data )
         return transformed_xml
-
-    def build_get_response( self, data ):
-        """ Builds GET response.
-            Content-type info: <http://www.w3.org/TR/xhtml-media-types/>
-            Called by views.run_transform_v1() """
-        resp = HttpResponse( data, content_type='application/xhtml+xml' )
-        return resp
 
     def handle_post( self, request ):
         """ Calls Transformer() to prepare data.
@@ -125,11 +124,30 @@ class ViewHelper( object ):
         transformed_xml = transformer.transform( xml_data, xsl_data )
         return transformed_xml
 
-    def build_post_response( self, data ):
-        """ Builds POST response.
+    def build_response( self, data ):
+        """ Builds GET response.
+            Content-type info: <http://www.w3.org/TR/xhtml-media-types/>
             Called by views.run_transform_v1() """
-        resp = HttpResponse( data, content_type='application/xhtml+xml' )
+        content_type='application/xhtml+xml'
+        if self.checker.check_xml( data ) == False:
+            content_type='text/text'
+        resp = HttpResponse( data, content_type=content_type )
         return resp
+
+    # def build_post_response( self, data ):
+    #     """ Builds POST response.
+    #         Called by views.run_transform_v1() """
+    #     resp = HttpResponse( data, content_type='application/xhtml+xml' )
+    #     return resp
+
+    # def build_post_response( self, data ):
+    #     """ Builds POST response.
+    #         Called by views.run_transform_v1() """
+    #     content_type='application/xhtml+xml'
+    #     if self.checker.check_xml( data ) == False:
+    #         content_type='text/text'
+    #     resp = HttpResponse( data, content_type=content_type )
+    #     return resp
 
     # end class ViewHelper
 
@@ -200,3 +218,23 @@ class Transformer( object ):
         return transformed_xml
 
     # end class Transformer
+
+
+class XMLchecker( object ):
+
+    def check_xml( self, transformed_output ):
+        """ Determines if file is xml-y enough (well-formed). Used to determine correct content-type for response.
+            From <http://stackoverflow.com/questions/13742538/how-to-validate-xml-using-python-without-third-party-libs>
+            Called by... """
+        assert type(transformed_output) == unicode
+        return_val = False
+        try:
+            tree_instance = ElementTree.fromstring( transformed_output.encode('utf-8') )
+            return_val = True
+        except Exception as e:
+            log.debug( 'transformed output must not be xml, ```%s```' % unicode(repr(e)) )
+        log.debug( 'return_val, `%s`' % return_val )
+        return return_val
+
+    # end class XMLchecker
+
