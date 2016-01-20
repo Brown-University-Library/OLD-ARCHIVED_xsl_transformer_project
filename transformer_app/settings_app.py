@@ -20,6 +20,6 @@ LEGIT_IPS_KEYS = json.loads( os.environ['XSL__LEGIT_IPS_KEYS_JSON'] )
 #     }
 #     '
 
-WHITELISTED_HOSTS = json.loads( os.environ['XSL__WHITELISTED_HOSTS'] )
+WHITELISTED_HOSTS = json.loads( os.environ['XSL__WHITELISTED_HOSTS_JSON'] )
 
 SAXON_CLASSPATH = os.environ['XSL__SAXON_CLASSPATH']
