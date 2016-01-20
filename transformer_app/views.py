@@ -14,12 +14,6 @@ validator = Validator()
 view_helper = ViewHelper()
 
 
-def hi( request ):
-    """ Returns simplest response. """
-    now = datetime.datetime.now()
-    return HttpResponse( '<p>hi</p> <p>( %s )</p>' % now )
-
-
 def run_transform_v1 ( request ):
     """ Manages transform flow. """
     log.debug( 'starting' )
@@ -28,10 +22,10 @@ def run_transform_v1 ( request ):
         return resp
     if request.method == 'GET':
         data = view_helper.handle_get( request )
-        resp = view_helper.build_get_response( data )
+        resp = view_helper.build_response( data )
     elif request.method == 'POST':
         data = view_helper.handle_post( request )
-        resp = view_helper.build_post_response( data )
+        resp = view_helper.build_response( data )
     return resp
 
 
