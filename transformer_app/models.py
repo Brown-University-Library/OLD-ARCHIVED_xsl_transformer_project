@@ -28,19 +28,6 @@ class Validator( object ):
         log.debug( 'return_val, `%s`' % return_val )
         return return_val
 
-    # def check_ip_key( self, request ):
-    #     """ Validates auth_key.
-    #         Called by check_validity() """
-    #     # log.debug( 'request.META, `%s`' % pprint.pformat(request.META) )
-    #     return_val = False
-    #     ( client_ip, auth_key ) = self._get_auth_info( request )
-    #     if auth_key == 'shib' and request.META.get('PATH_INFO', 'unavailable') == '/v1/shib/':
-    #         return_val = True
-    #     else:
-    #         return_val = self._check_non_shib_info( client_ip, auth_key )
-    #     log.debug( 'client_ip, `%s`; auth_key, `%s` has return_val, `%s`' % (client_ip, auth_key, return_val) )
-    #     return return_val
-
     def check_ip_key( self, request ):
         """ Validates auth_key.
             Called by check_validity() """
@@ -211,32 +198,5 @@ class Transformer( object ):
         transformed_xml = temp_output_file_reference.read().decode('utf-8')  # saxon produces byte-string output
         log.debug( 'type(transformed_xml), `%s`; transformed_xml, ```%s```' % (type(transformed_xml), transformed_xml) )
         return transformed_xml
-
-    # def transform( self, xml_data, xsl_data ):
-    #     """ Manages the transform and returns output. """
-    #     assert type(xml_data) == str
-    #     assert type(xsl_data) == str
-    #     ( temp_xml_path, temp_xsl_path, temp_output_path, transformed_xml ) = ( '', '', '', '' )
-    #     with tempfile.NamedTemporaryFile() as temp_xml:
-    #         temp_xml_path = temp_xml.name
-    #         log.debug( 'temp_xml_path, `%s`' % temp_xml_path )
-    #         temp_xml.write( xml_data )
-    #         temp_xml.flush()
-    #         with tempfile.NamedTemporaryFile() as temp_xsl:
-    #             temp_xsl_path = temp_xsl.name
-    #             log.debug( 'temp_xsl_path, `%s`' % temp_xsl_path )
-    #             temp_xsl.write( xsl_data )
-    #             temp_xsl.flush()
-    #             with tempfile.NamedTemporaryFile() as temp_output:
-    #                 temp_output_path = temp_output.name
-    #                 log.debug( 'temp_output_path, `%s`' % temp_output_path )
-    #                 command = 'java -cp %s net.sf.saxon.Transform -t -s:"%s" -xsl:"%s" -o:"%s"' % (
-    #                     settings_app.SAXON_CLASSPATH, temp_xml_path, temp_xsl_path, temp_output_path )
-    #                 log.debug( 'command, `%s`' % command )
-    #                 subprocess.call( [command, '-1'], shell=True )
-    #                 with open( temp_output_path ) as f:
-    #                     transformed_xml = f.read()
-    #                     log.debug( 'transformed_xml, ```%s```' % transformed_xml )
-    #     return transformed_xml
 
     # end class Transformer
