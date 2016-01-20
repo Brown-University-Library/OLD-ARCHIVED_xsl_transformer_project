@@ -92,18 +92,20 @@ You can supply GET xsl and xml urls to web-accessible utf-8 encoded files, or yo
         # </html>
 
 
-## Notes ##
+### notes ###
 
-- an auth_key, for POSTs and GETs, is linked to an IP (except for auth_key=shib and auth_key= whitelist). For convenience, developers can see their ip, and get a randomly generated key which can be added to the app's settings file, at:
+- An auth_key, for POSTs and GETs, is linked to an IP (except for auth_key=shib and auth_key= whitelist). For convenience, developers can see their ip, and get a randomly generated key which can be added to the app's settings file, at:
 
         https://host/xsl_transformer/keymaker/
 
-- for convenience, specified users can test transformation output interactively by using authkey=shib at the url:
+- For convenience, specified users can test transformation output interactively by using authkey=shib at the url:
 
         https://host/xsl_transformer/v1/shib/?xml_url=...&xsl_url=...&auth_key=shib
 
-- you can make an ajax call if the xml_url and xsl_url are whitelisted via:
+- You can make an ajax call if the xml_url and xsl_url are whitelisted via:
 
         https://host/xsl_transformer/v1/?xml_url=...&xsl_url=...&auth_key=whitelist
+
+- The transformed output is checked for well-formedness. If it's well-formed, the returned content-type will be `application/xhtml+xml`; otherwise, it'll be `text/text`.
 
 ---
