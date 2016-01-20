@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-import datetime, json, logging, os, pprint, subprocess, tempfile
+import datetime, json, logging, os, pprint, subprocess, tempfile, urllib, urlparse
 import requests
 from . import settings_app
 from django.core.urlresolvers import reverse
@@ -28,6 +28,19 @@ class Validator( object ):
         log.debug( 'return_val, `%s`' % return_val )
         return return_val
 
+    # def check_ip_key( self, request ):
+    #     """ Validates auth_key.
+    #         Called by check_validity() """
+    #     # log.debug( 'request.META, `%s`' % pprint.pformat(request.META) )
+    #     return_val = False
+    #     ( client_ip, auth_key ) = self._get_auth_info( request )
+    #     if auth_key == 'shib' and request.META.get('PATH_INFO', 'unavailable') == '/v1/shib/':
+    #         return_val = True
+    #     else:
+    #         return_val = self._check_non_shib_info( client_ip, auth_key )
+    #     log.debug( 'client_ip, `%s`; auth_key, `%s` has return_val, `%s`' % (client_ip, auth_key, return_val) )
+    #     return return_val
+
     def check_ip_key( self, request ):
         """ Validates auth_key.
             Called by check_validity() """
@@ -36,6 +49,8 @@ class Validator( object ):
         ( client_ip, auth_key ) = self._get_auth_info( request )
         if auth_key == 'shib' and request.META.get('PATH_INFO', 'unavailable') == '/v1/shib/':
             return_val = True
+        elif auth_key == 'whitelist':
+            return_val = self._check_whitelist( request.method, request.GET.get('xml_url', 'unavailable'), request.GET.get('xsl_url', 'unavailable') )
         else:
             return_val = self._check_non_shib_info( client_ip, auth_key )
         log.debug( 'client_ip, `%s`; auth_key, `%s` has return_val, `%s`' % (client_ip, auth_key, return_val) )
@@ -51,6 +66,20 @@ class Validator( object ):
             auth_key = request.POST.get('auth_key', 'unavailable')
         log.debug( '(client_ip, auth_key), ```%s```' % pprint.pformat((client_ip, auth_key)) )
         return ( client_ip, auth_key )
+
+    def _check_whitelist( self, method, xml_url, xsl_url ):
+        """ Checks xml_url and xsl_url against whitelist.
+            Called by check_ip_key() """
+        return_val = False
+        if method != 'GET' or xml_url == 'unavailable' or xsl_url == 'unavailable':
+            return return_val
+        ( decoded_xml_url, decoded_xsl_url ) = ( urllib.unquote(xml_url), urllib.unquote(xsl_url) )
+        log.debug( 'decoded_xml_url, `%s`; decoded_xsl_url, `%s`' % (decoded_xml_url, decoded_xsl_url) )
+        ( xml_hostname, xsl_hostname ) = ( urlparse.urlsplit(decoded_xml_url).hostname, urlparse.urlsplit(decoded_xsl_url).hostname )
+        if xml_hostname in settings_app.WHITELISTED_HOSTS and xsl_hostname in settings_app.WHITELISTED_HOSTS:
+            return_val = True
+        log.debug( 'return_val, `%s`' % return_val )
+        return return_val
 
     def _check_non_shib_info( self, client_ip, auth_key ):
         """ Checks non-shib auth_key against client_ip.
