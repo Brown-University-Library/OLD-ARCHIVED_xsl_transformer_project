@@ -14,7 +14,11 @@ validator = Validator()
 view_helper = ViewHelper()
 
 
-def run_transform_v1 ( request ):
+def info( request ):
+    return HttpResponseRedirect( 'https://github.com/Brown-University-Library/xsl_transformer_project/blob/master/README.md' )
+
+
+def run_transform_v1( request ):
     """ Manages transform flow. """
     log.debug( 'starting' )
     resp = HttpResponseBadRequest( 'Bad Request' )

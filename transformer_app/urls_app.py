@@ -10,9 +10,9 @@ urlpatterns = patterns('',
     url( r'^v1/$',  'transformer_app.views.run_transform_v1', name='transformer_v1_url' ),
     url( r'^v1/shib/$',  'transformer_app.views.run_transform_v1', name='transformer_v1_url' ),
 
-    url( r'^info/$',  'transformer_app.views.hi', name='info_url' ),
-
     url( r'^keymaker/$',  'transformer_app.views.keymaker', name='keymaker_url' ),
+
+    url( r'^info/$',  'transformer_app.views.info', name='info_url' ),
 
     url( r'^$',  RedirectView.as_view(pattern_name='info_url') ),
 
