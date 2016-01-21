@@ -83,21 +83,6 @@ class Validator( object ):
         log.debug( 'return_val, `%s`' % return_val )
         return return_val
 
-    # def check_params( self, request ):
-    #     """ Validates params.
-    #         Called by check_validity() """
-    #     return_val = False
-    #     if request.method == 'POST':
-    #         log.debug( 'sorted(request.POST.keys()), ```%s```' % pprint.pformat(sorted(request.POST.keys())) )
-    #         if sorted( request.POST.keys() ) == [ 'auth_key', 'xml', 'xsl' ]:
-    #             return_val = True
-    #     elif request.method == 'GET':
-    #         log.debug( 'sorted(request.GET.keys()), ```%s```' % pprint.pformat(sorted(request.GET.keys())) )
-    #         if sorted( request.GET.keys() ) == [ 'auth_key', 'xml_url', 'xsl_url' ]:
-    #             return_val = True
-    #     log.debug( 'return_val, `%s`' % return_val )
-    #     return return_val
-
     def check_params( self, request ):
         """ Validates params.
             Called by check_validity() """
@@ -122,34 +107,6 @@ class Validator( object ):
             return_val = True
         log.debug( 'return_val, `%s`' % return_val )
         return return_val
-
-    # def _check_post_params( self, param_keys ):
-    #     """ Validates POST params.
-    #         Called by check_params() """
-    #     return_val = 'init'
-    #     for required_param in [ 'auth_key', 'xml', 'xsl' ]:
-    #         if required_param not in param_keys:
-    #             log.debug( 'missing (at least) post-param-key, `%s`' % required_param )
-    #             return_val = False
-    #             break
-    #     if return_val == 'init':
-    #         return_val = True
-    #     log.debug( 'return_val, `%s`' % return_val )
-    #     return return_val
-
-    # def _check_get_params( self, param_keys ):
-    #     """ Validates GET params.
-    #         Called by check_params() """
-    #     return_val = 'init'
-    #     for required_param in [ 'auth_key', 'xml_url', 'xsl_url' ]:
-    #         if required_param not in param_keys:
-    #             log.debug( 'missing (at least) get-param-key, `%s`' % required_param )
-    #             return_val = False
-    #             break
-    #     if return_val == 'init':
-    #         return_val = True
-    #     log.debug( 'return_val, `%s`' % return_val )
-    #     return return_val
 
     # end class Validator
 
