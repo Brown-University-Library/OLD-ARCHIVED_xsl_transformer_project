@@ -108,4 +108,6 @@ You can supply GET xsl and xml urls to web-accessible utf-8 encoded files, or yo
 
 - The transformed output is checked for well-formedness. If it's well-formed, the returned content-type will be `application/xhtml+xml`; otherwise, it'll be `text/text`.
 
+- This webservice is a wrapper around [Saxon-HE](http://www.saxonica.com/download/opensource.xml), version 9.6.0.8, released on 10 December 2015.
+
 ---
