@@ -9,7 +9,6 @@ Environmental variables triggered in project's env_xsl/bin/activate, when using 
 """
 
 import json, os
-import dj_database_url
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
