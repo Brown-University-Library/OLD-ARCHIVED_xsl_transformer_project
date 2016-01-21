@@ -15,7 +15,7 @@ import json, os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['XSL__SECRET_KEY']
@@ -58,13 +58,13 @@ WSGI_APPLICATION = 'config.passenger_wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = json.loads( os.environ['XSL__DATABASES_JSON'] )
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.6/topics/i18n/
+# https://docs.djangoproject.com/en/1.9/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -78,7 +78,7 @@ USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = os.environ['XSL__STATIC_URL']
 STATIC_ROOT = os.environ['XSL__STATIC_ROOT']  # needed for collectstatic command
@@ -96,7 +96,7 @@ EMAIL_PORT = int( os.environ['XSL__EMAIL_PORT'] )
 
 # sessions
 
-# <https://docs.djangoproject.com/en/1.6/ref/settings/#std:setting-SESSION_SAVE_EVERY_REQUEST>
+# <https://docs.djangoproject.com/en/1.9/ref/settings/#std:setting-SESSION_SAVE_EVERY_REQUEST>
 # Thinking: not that many concurrent users, and no pages where session info isn't required, so overhead is reasonable.
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
