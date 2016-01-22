@@ -1,4 +1,5 @@
 Django==1.9.1
 PyMySQL==0.6.7
+pytz==2015.7
 requests==2.9.1
 shellvars-py==0.1.2
