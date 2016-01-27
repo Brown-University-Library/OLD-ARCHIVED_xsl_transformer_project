@@ -49,6 +49,25 @@ class Transformer_Test( TestCase ):
             single_line_transformed_output
             )
 
+    def test_transform_bad( self ):
+        """ Tests failed transformation. """
+        XML_DATA = '''<student><namez></name></student>'''
+        XSL_DATA = '''<?xml version="1.0" ?>
+        <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:template match="student">
+            <p><xsl:value-of select="."/></p>
+          </xsl:template>
+          <xsl:template match="/">
+            <html>
+            <body>
+            <xsl:apply-templates/>
+            </body>
+            </html>
+          </xsl:template>
+        </xsl:stylesheet>'''
+        transformed_output = self.tran.transform( XML_DATA, XSL_DATA )
+        self.assertTrue( 'Error on transformation' in transformed_output )
+
     # end class Transformer_Test
 
 
