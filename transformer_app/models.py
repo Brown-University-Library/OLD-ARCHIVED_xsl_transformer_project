@@ -198,20 +198,6 @@ class Transformer( object ):
         temp_xsl_file_reference.flush()
         return temp_xsl_path
 
-    def execute_transform( self, temp_xml_path, temp_xsl_path, temp_output_file_reference ):
-        """ Calls saxon and returns the transform result.
-            Called by transform() """
-        temp_output_path = temp_output_file_reference.name
-        log.debug( 'temp_output_path, `%s`' % temp_output_path )
-        command = 'java -cp %s net.sf.saxon.Transform -t -s:"%s" -xsl:"%s" -o:"%s"' % (
-            settings_app.SAXON_CLASSPATH, temp_xml_path, temp_xsl_path, temp_output_path )
-        log.debug( 'command, `%s`' % command )
-        subprocess.call( [command, '-1'], shell=True )
-        temp_output_file_reference.flush()
-        transformed_xml = temp_output_file_reference.read().decode('utf-8')  # saxon produces byte-string output
-        log.debug( 'type(transformed_xml), `%s`; transformed_xml, ```%s```' % (type(transformed_xml), transformed_xml) )
-        return transformed_xml
-
     # def execute_transform( self, temp_xml_path, temp_xsl_path, temp_output_file_reference ):
     #     """ Calls saxon and returns the transform result.
     #         Called by transform() """
@@ -220,17 +206,31 @@ class Transformer( object ):
     #     command = 'java -cp %s net.sf.saxon.Transform -t -s:"%s" -xsl:"%s" -o:"%s"' % (
     #         settings_app.SAXON_CLASSPATH, temp_xml_path, temp_xsl_path, temp_output_path )
     #     log.debug( 'command, `%s`' % command )
-    #     try:
-    #         subprocess.check_output( [command, '-1'], stderr=subprocess.STDOUT, shell=True )
-    #         temp_output_file_reference.flush()
-    #         transformed_xml = temp_output_file_reference.read().decode('utf-8')  # saxon produces byte-string output
-    #     except subprocess.CalledProcessError as e:
-    #         log.error( 'exception, ```%s```' % unicode(repr(e)) )
-    #         # log.error( 'e.output, `%s`' % e.output )
-    #         # log.error( 'e.__dict__, ```%s```' % pprint.pformat(e.__dict__) )
-    #         transformed_xml = 'Error on transformation; see log at `%s`' % unicode( datetime.datetime.now() )
+    #     subprocess.call( [command, '-1'], shell=True )
+    #     temp_output_file_reference.flush()
+    #     transformed_xml = temp_output_file_reference.read().decode('utf-8')  # saxon produces byte-string output
     #     log.debug( 'type(transformed_xml), `%s`; transformed_xml, ```%s```' % (type(transformed_xml), transformed_xml) )
     #     return transformed_xml
+
+    def execute_transform( self, temp_xml_path, temp_xsl_path, temp_output_file_reference ):
+        """ Calls saxon and returns the transform result.
+            Called by transform() """
+        temp_output_path = temp_output_file_reference.name
+        log.debug( 'temp_output_path, `%s`' % temp_output_path )
+        command = 'java -cp %s net.sf.saxon.Transform -t -s:"%s" -xsl:"%s" -o:"%s"' % (
+            settings_app.SAXON_CLASSPATH, temp_xml_path, temp_xsl_path, temp_output_path )
+        log.debug( 'command, `%s`' % command )
+        try:
+            subprocess.check_output( [command, '-1'], stderr=subprocess.STDOUT, shell=True )
+            temp_output_file_reference.flush()
+            transformed_xml = temp_output_file_reference.read().decode('utf-8')  # saxon produces byte-string output
+        except subprocess.CalledProcessError as e:
+            log.error( 'exception, ```%s```' % unicode(repr(e)) )
+            log.error( 'e.output, `%s`' % e.output )
+            # log.error( 'e.__dict__, ```%s```' % pprint.pformat(e.__dict__) )
+            transformed_xml = 'Error on transformation; see log at `%s`' % unicode( datetime.datetime.now() )
+        log.debug( 'type(transformed_xml), `%s`; transformed_xml, ```%s```' % (type(transformed_xml), transformed_xml) )
+        return transformed_xml
 
     # end class Transformer
 
