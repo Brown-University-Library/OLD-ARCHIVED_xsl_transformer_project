@@ -129,6 +129,7 @@ LOGGING = {
         'transformer_app': {
             'handlers': ['logfile'],
             'level': os.environ.get(u'XSL__LOG_LEVEL'),
+            'propagate': False
         },
     }
 }
