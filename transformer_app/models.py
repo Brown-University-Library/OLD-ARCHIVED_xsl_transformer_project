@@ -40,7 +40,10 @@ class Validator( object ):
         if auth_key == 'shib' and request.META.get('PATH_INFO', 'unavailable') == '/v1/shib/':
             return_val = True
         elif auth_key == 'whitelist':
-            return_val = self._check_whitelist( request.method, request.GET.get('xml_url', 'unavailable'), request.GET.get('xsl_url', 'unavailable') )
+            if request.method == 'POST' and client_ip == '127.0.0.1':
+                return_val = True
+            else:
+                return_val = self._check_whitelist( request.method, request.GET.get('xml_url', 'unavailable'), request.GET.get('xsl_url', 'unavailable') )
         else:
             return_val = self._check_non_shib_info( client_ip, auth_key )
         log.debug( 'client_ip, `%s`; auth_key, `%s` has return_val, `%s`' % (client_ip, auth_key, return_val) )
