@@ -7,10 +7,12 @@ from xml.etree import ElementTree
 #
 import requests
 from . import settings_app
+from django.conf import settings as project_settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.encoding import smart_unicode
 from django.utils.text import slugify
+
 
 log = logging.getLogger(__name__)
 
@@ -40,7 +42,7 @@ class Validator( object ):
         if auth_key == 'shib' and request.META.get('PATH_INFO', 'unavailable') == '/v1/shib/':
             return_val = True
         elif auth_key == 'whitelist':
-            if request.method == 'POST' and client_ip == '127.0.0.1':
+            if request.method == 'POST' and client_ip == '127.0.0.1' and project_settings.DEBUG == True:
                 return_val = True
             else:
                 return_val = self._check_whitelist( request.method, request.GET.get('xml_url', 'unavailable'), request.GET.get('xsl_url', 'unavailable') )
