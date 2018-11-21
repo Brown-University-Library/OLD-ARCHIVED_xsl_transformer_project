@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 import json, os
 
 
+README_URL = "https://github.com/Brown-University-Library/xsl_transformer_project/blob/master/README.md"
+
 LEGIT_IPS_KEYS = json.loads( os.environ['XSL__LEGIT_IPS_KEYS_JSON'] )
 
 """

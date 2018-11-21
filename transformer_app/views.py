@@ -2,12 +2,14 @@
 
 from __future__ import unicode_literals
 import datetime, json, logging, os, pprint, random
+from .models import Validator, ViewHelper
 from django.conf import settings as project_settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
-from .models import Validator, ViewHelper
 from django.shortcuts import get_object_or_404, render
+from transformer_app.lib import info_helper
+
 
 log = logging.getLogger(__name__)
 validator = Validator()
@@ -15,7 +17,18 @@ view_helper = ViewHelper()
 
 
 def info( request ):
-    return HttpResponseRedirect( 'https://github.com/Brown-University-Library/xsl_transformer_project/blob/master/README.md' )
+    """ Returns basic data including branch & commit. """
+    log.debug( 'user-agent, ```%s```; ip, ```%s```; referrer, ```%s```' %
+        (request.META.get('HTTP_USER_AGENT', None), request.META.get('REMOTE_ADDR', None), request.META.get('HTTP_REFERER', None)) )
+    rq_now = datetime.datetime.now()
+    commit = info_helper.get_commit()
+    branch = info_helper.get_branch()
+    info_txt = commit.replace( 'commit', branch )
+    resp_now = datetime.datetime.now()
+    taken = resp_now - rq_now
+    context_dct = info_helper.make_context( request, rq_now, info_txt, taken )
+    output = json.dumps( context_dct, sort_keys=True, indent=2 )
+    return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
 def run_transform_v1( request ):
