@@ -1,3 +1,6 @@
+[![best-practice-image-link](https://library.brown.edu/good_code/project_image/xslt_service/)](https://library.brown.edu/good_code/project_info/xslt_service/)
+
+
 ### overview ###
 
 This [django](https://www.djangoproject.com) application runs [xslt](https://en.wikipedia.org/wiki/XSLT) (2.0 compatible) transformations, and returns the results.
@@ -94,7 +97,7 @@ You can supply GET xsl and xml urls to web-accessible utf-8 encoded files, or yo
 
 ### notes ###
 
-- An auth_key, for POSTs and GETs, is linked to an IP (except for auth_key=shib and auth_key= whitelist). For convenience, developers can see their ip, and get a randomly generated key which can be added to the app's settings file, at:
+- An auth_key, for POSTs and GETs, is linked to an IP (except for auth_key=shib and auth_key=whitelist). For convenience, developers can see their ip, and get a randomly generated key which can be added to the app's settings file, at:
 
         https://host/xsl_transformer/keymaker/
 
