@@ -9,6 +9,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 # from django.utils.encoding import smart_unicode
 from django.utils.text import slugify
 
+import urllib.parse
+
 
 log = logging.getLogger(__name__)
 
@@ -64,9 +66,9 @@ class Validator( object ):
         return_val = False
         if method != 'GET' or xml_url == 'unavailable' or xsl_url == 'unavailable':
             return return_val
-        ( decoded_xml_url, decoded_xsl_url ) = ( urllib.unquote(xml_url), urllib.unquote(xsl_url) )
+        ( decoded_xml_url, decoded_xsl_url ) = ( urllib.parse.unquote(xml_url), urllib.parse.unquote(xsl_url) )
         log.debug( 'decoded_xml_url, `%s`; decoded_xsl_url, `%s`' % (decoded_xml_url, decoded_xsl_url) )
-        ( xml_hostname, xsl_hostname ) = ( urlparse.urlsplit(decoded_xml_url).hostname, urlparse.urlsplit(decoded_xsl_url).hostname )
+        ( xml_hostname, xsl_hostname ) = ( urllib.parse.urlsplit(decoded_xml_url).hostname, urllib.parse.urlsplit(decoded_xsl_url).hostname )
         if xml_hostname in settings_app.WHITELISTED_HOSTS and xsl_hostname in settings_app.WHITELISTED_HOSTS:
             return_val = True
         log.debug( 'return_val, `%s`' % return_val )
