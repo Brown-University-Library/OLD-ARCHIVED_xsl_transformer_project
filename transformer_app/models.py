@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-#
-import datetime, json, logging, os, pprint, subprocess, tempfile, urllib, urlparse
+import datetime, json, logging, os, pprint, subprocess, tempfile, urllib
 from xml.etree import ElementTree
 #
 import requests
@@ -10,8 +6,10 @@ from . import settings_app
 from django.conf import settings as project_settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.utils.encoding import smart_unicode
+# from django.utils.encoding import smart_unicode
 from django.utils.text import slugify
+
+import urllib.parse
 
 
 log = logging.getLogger(__name__)
@@ -68,9 +66,9 @@ class Validator( object ):
         return_val = False
         if method != 'GET' or xml_url == 'unavailable' or xsl_url == 'unavailable':
             return return_val
-        ( decoded_xml_url, decoded_xsl_url ) = ( urllib.unquote(xml_url), urllib.unquote(xsl_url) )
+        ( decoded_xml_url, decoded_xsl_url ) = ( urllib.parse.unquote(xml_url), urllib.parse.unquote(xsl_url) )
         log.debug( 'decoded_xml_url, `%s`; decoded_xsl_url, `%s`' % (decoded_xml_url, decoded_xsl_url) )
-        ( xml_hostname, xsl_hostname ) = ( urlparse.urlsplit(decoded_xml_url).hostname, urlparse.urlsplit(decoded_xsl_url).hostname )
+        ( xml_hostname, xsl_hostname ) = ( urllib.parse.urlsplit(decoded_xml_url).hostname, urllib.parse.urlsplit(decoded_xsl_url).hostname )
         if xml_hostname in settings_app.WHITELISTED_HOSTS and xsl_hostname in settings_app.WHITELISTED_HOSTS:
             return_val = True
         log.debug( 'return_val, `%s`' % return_val )
@@ -175,8 +173,8 @@ class Transformer( object ):
             With statements are nested because each temporary file object will disappear once its with-block completes.
             Great tempfile resource: <https://pymotw.com/2/tempfile/>
             Called by ViewHelper.handle_get() & ViewHelper.handle_post() """
-        assert type(xml_data) == unicode
-        assert type(xsl_data) == unicode
+        assert type(xml_data) == str
+        assert type(xsl_data) == str
         with tempfile.NamedTemporaryFile() as temp_xml_file_reference:
             temp_xml_path = self.write_xml( temp_xml_file_reference, xml_data )
             with tempfile.NamedTemporaryFile() as temp_xsl_file_reference:
@@ -230,10 +228,10 @@ class Transformer( object ):
             temp_output_file_reference.flush()
             transformed_xml = temp_output_file_reference.read().decode('utf-8')  # saxon produces byte-string output
         except subprocess.CalledProcessError as e:
-            log.error( 'exception, ```%s```' % unicode(repr(e)) )
+            log.error( 'exception, ```%s```' % repr(e) )
             log.error( 'e.output, `%s`' % e.output )
             # log.error( 'e.__dict__, ```%s```' % pprint.pformat(e.__dict__) )
-            transformed_xml = 'Error on transformation; see log at `%s`' % unicode( datetime.datetime.now() )
+            transformed_xml = 'Error on transformation; see log at `%s`' % str( datetime.datetime.now() )
         log.debug( 'type(transformed_xml), `%s`; transformed_xml, ```%s```' % (type(transformed_xml), transformed_xml) )
         return transformed_xml
 
@@ -246,13 +244,13 @@ class XMLchecker( object ):
         """ Determines if file is xml-y enough (well-formed). Used to determine correct content-type for response.
             From <http://stackoverflow.com/questions/13742538/how-to-validate-xml-using-python-without-third-party-libs>
             Called by... """
-        assert type(transformed_output) == unicode
+        assert type(transformed_output) == str
         return_val = False
         try:
             tree_instance = ElementTree.fromstring( transformed_output.encode('utf-8') )
             return_val = True
         except Exception as e:
-            log.debug( 'transformed output must not be xml, ```%s```' % unicode(repr(e)) )
+            log.debug( 'transformed output must not be xml, ```%s```' % repr(e) )
         log.debug( 'return_val, `%s`' % return_val )
         return return_val
 

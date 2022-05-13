@@ -28,9 +28,6 @@ You can supply GET xsl and xml urls to web-accessible utf-8 encoded files, or yo
 
 - Example GET...
 
-        # -*- coding: utf-8 -*-
-
-        from __future__ import unicode_literals
         import requests
 
         URL = 'https://host/xsl_transformer/v1/'

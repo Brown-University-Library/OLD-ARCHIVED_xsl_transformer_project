@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
 import logging
 from .models import Transformer, XMLchecker
 from django.test import TestCase
@@ -39,7 +36,7 @@ class Transformer_Test( TestCase ):
         </xsl:stylesheet>'''
         transformed_output = self.tran.transform( XML_DATA, XSL_DATA )
         self.assertEqual(
-            unicode,
+            str,
             type(transformed_output)
             )
         single_line_transformed_output = transformed_output.replace( ' ', '' ).replace( '\n', '' )
