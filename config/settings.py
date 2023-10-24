@@ -91,6 +91,8 @@ TEMPLATE_DIRS = json.loads( os.environ['XSL__TEMPLATE_DIRS'] )  # list
 
 # Email
 EMAIL_HOST = os.environ['XSL__EMAIL_HOST']
+SERVER_EMAIL = os.environ['XSL__EMAIL_FROM_ADDRESS']
+EMAIL_HOST = os.environ['XSL__EMAIL_HOST']
 EMAIL_PORT = int( os.environ['XSL__EMAIL_PORT'] )
 
 
